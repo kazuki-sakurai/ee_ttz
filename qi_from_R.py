@@ -149,7 +149,11 @@ def process_one(in_path, out_path, do_sdp=True, force=False):
     # Lazy import of the Julia SDP so --no-sdp avoids the ~30 s warm-up.
     gmn_callable = None
     if do_sdp:
-        from ppt_julia import gmn_hmg
+
+        from ppt_cvxpy import get_GMN as _get_GMN
+        def gmn_hmg(rho):
+            return _get_GMN(rho, dims=[2, 2, 3])        
+        #from ppt_julia import gmn_hmg
         gmn_callable = gmn_hmg
 
     print(f"  loaded {Npts} kinematic points from {os.path.basename(in_path)}")

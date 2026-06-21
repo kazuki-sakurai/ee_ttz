@@ -75,7 +75,10 @@ from math import sqrt
 sys.path.append('/Users/kazuki/Projects/pyHELAS')
 from QI_functions import (normalise, purity, concurrence,
                           log_neg_bip, log_negativity)
-from ppt_julia import gmn_hmg
+#from ppt_julia import gmn_hmg
+from ppt_cvxpy import get_GMN as _get_GMN
+def gmn_hmg(rho):
+    return _get_GMN(rho, dims=[2, 2, 3])
 
 # We drive plot_qi.py in-process (not via subprocess) so we can patch its
 # COL_TITLES dict before each plot.  Importing has the side-effect of

@@ -54,8 +54,9 @@ from QI_functions import *           # normalise, purity, concurrence,
                                      # log_neg_bip, log_negativity
 from ee_ttz import *                 # mt, mZ, ...
 from ee_ttz_func import *
-from ppt_julia import gmn_hmg
-
+from ppt_cvxpy import get_GMN as _get_GMN
+def gmn_hmg(rho):
+    return _get_GMN(rho, dims=[2, 2, 3])        
 
 # Same QI list as analysis.py / qi_from_psinteg.py.
 ENTRIES    = ['pure', 'pure1', 'pure2', 'pure3',

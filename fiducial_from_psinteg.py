@@ -357,7 +357,7 @@ def _integrate_cut(m_axis, c_axis, dsig_2d, weighted_R_2d,
 
     # 2-D trapezoid: integrate over cos theta_Z first, then m_tt.
     # (np.trapz is deprecated in NumPy 2.x in favour of np.trapezoid.)
-    trap = getattr(np, 'trapezoid', np.trapz)
+    trap = getattr(np, 'trapezoid', getattr(np, 'trapz', None))
     sigma_fid = trap(trap(dsig_fine, c_fine, axis=1), m_fine, axis=0)
     rho_num   = trap(trap(wR_fine,   c_fine, axis=1), m_fine, axis=0)
     return float(sigma_fid), rho_num
@@ -447,7 +447,7 @@ def _integrate_polygon(m_axis, c_axis, dsig_2d, weighted_R_2d,
     dsig_fine = np.where(mask, dsig_fine, 0.0)
     wR_fine   = np.where(mask[..., None, None], wR_fine, 0+0j)
 
-    trap = getattr(np, 'trapezoid', np.trapz)
+    trap = getattr(np, 'trapezoid', getattr(np, 'trapz', None))
     sigma_fid = trap(trap(dsig_fine, c_fine, axis=1), m_fine, axis=0)
     rho_num   = trap(trap(wR_fine,   c_fine, axis=1), m_fine, axis=0)
     return float(sigma_fid), rho_num
@@ -492,7 +492,10 @@ def _compute_qi(rho):
     GMN_HMG / Julia import done lazily so users who pass --no-qi (or
     don't need GMN) don't pay the 30 s Julia warm-up.
     """
-    from ppt_julia import gmn_hmg          # lazy import (Julia warm-up)
+    #from ppt_julia import gmn_hmg          # lazy import (Julia warm-up)
+    from ppt_cvxpy import get_GMN as _get_GMN
+    def gmn_hmg(rho):
+        return _get_GMN(rho, dims=[2, 2, 3])    
     q = {}
     q['pure'] = purity(rho)
 
